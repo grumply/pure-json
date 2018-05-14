@@ -66,3 +66,8 @@ foreign import javascript unsafe
 pretty :: ToJSON a => a -> Txt
 pretty = pretty_js . toJSON
 
+foreign import javascript unsafe
+  "console.log($1)" log_json_js :: Value -> IO ()
+
+logJSON :: ToJSON a => a -> IO ()
+logJSON = log_json_js . toJSON

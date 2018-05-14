@@ -1,5 +1,5 @@
 {-# LANGUAGE MultiParamTypeClasses, TypeSynonymInstances, FlexibleInstances #-}
-module Pure.Data.JSON.GHC (module Pure.Data.JSON.GHC, parseMaybe) where
+module Pure.Data.JSON.GHC (module Pure.Data.JSON.GHC, ToJSON(..), FromJSON(..), parseMaybe) where
 
 -- from aeson
 import qualified Data.Aeson as Aeson
@@ -31,6 +31,9 @@ import qualified Data.Vector as V
 
 pretty :: ToJSON a => a -> Txt
 pretty = TL.toStrict . TL.decodeUtf8 . encodePretty
+
+logJSON :: ToJSON a => a -> IO ()
+logJSON = putStrLn . fromTxt . pretty
 
 type Obj = O.Object
 
