@@ -1,5 +1,5 @@
 {-# LANGUAGE MultiParamTypeClasses, TypeSynonymInstances, FlexibleInstances #-}
-module Pure.Data.JSON.GHC (module Pure.Data.JSON.GHC, ToJSON(..), FromJSON(..), parseMaybe) where
+module Pure.Data.JSON.GHC (module Pure.Data.JSON.GHC, ToJSON(..), FromJSON(..), encode, eitherDecode, eitherDecode', parseMaybe, fromJSON, Value, Result(..)) where
 
 -- from aeson
 import qualified Data.Aeson as Aeson
