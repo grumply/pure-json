@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, TypeSynonymInstances, FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses, TypeSynonymInstances, FlexibleInstances, CPP #-}
 module Pure.Data.JSON.GHCJS (module Pure.Data.JSON.GHCJS, module Export) where
 
 import Pure.Data.Txt
@@ -54,7 +54,12 @@ foreign import javascript unsafe
 
 instance Monoid Obj where
   mempty = emptyObject
+#if !MIN_VERSION_base(4,11,0)
   mappend = merge_objects_js
+#else
+instance Semigroup Obj where
+  (<>) = merge_objects_js
+#endif
 
 instance ToTxt Value where
   {-# INLINE toTxt #-}
