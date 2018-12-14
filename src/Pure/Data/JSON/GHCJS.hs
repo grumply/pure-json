@@ -76,3 +76,6 @@ foreign import javascript unsafe
 
 logJSON :: ToJSON a => a -> IO ()
 logJSON = log_json_js . toJSON
+
+decode :: FromJSON a => Txt -> Maybe a
+decode = parseMaybe parseJSON . js_JSON_parse
