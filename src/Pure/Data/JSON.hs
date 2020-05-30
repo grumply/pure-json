@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
-module Pure.Data.JSON (parse,decode,encode,decodeBS,encodeBS,module Export) where
+module Pure.Data.JSON (parse,decode,decodeEither,encode,decodeBS,decodeBSEither,encodeBS,module Export) where
 
 import Pure.Data.Txt (Txt,ToTxt(..),FromTxt(..))
 
@@ -7,7 +7,7 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BSL
 
 #ifdef __GHCJS__
-import           Pure.Data.JSON.GHCJS as Export hiding (encode,decode)
+import           Pure.Data.JSON.GHCJS as Export hiding (encode,decode,decodeEither)
 import qualified Pure.Data.JSON.GHCJS as GHCJS
 #else
 import           Pure.Data.JSON.GHC   as Export hiding (encode,decode)
@@ -25,6 +25,14 @@ decode = GHCJS.decode
 decode = GHC.decode . fromTxt
 #endif
 
+{-# INLINE decodeEither #-}
+decodeEither :: FromJSON a => Txt -> Either String a
+#ifdef __GHCJS__
+decodeEither = GHCJS.decodeEither
+#else
+decodeEither = GHC.eitherDecode . fromTxt
+#endif
+
 {-# INLINE encode #-}
 encode :: ToJSON a => a -> Txt
 #ifdef __GHCJS__
@@ -39,6 +47,14 @@ decodeBS :: FromJSON a => BSL.ByteString -> Maybe a
 decodeBS = GHCJS.decode . toTxt
 #else
 decodeBS = GHC.decode
+#endif
+
+{-# INLINE decodeBSEither #-}
+decodeBSEither :: FromJSON a => BSL.ByteString -> Either String a
+#ifdef __GHCJS__
+decodeBSEither = GHCJS.decodeEither . toTxt
+#else
+decodeBSEither = GHC.eitherDecode
 #endif
 
 {-# INLINE encodeBS #-}
