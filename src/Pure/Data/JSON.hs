@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
-module Pure.Data.JSON (parse,decode,decodeEither,encode,decodeBS,decodeBSEither,encodeBS,object,module Export) where
+module Pure.Data.JSON (parse,decode,decodeEither,encode,decodeBS,decodeBSEither,encodeBS,object,traceJSON,module Export) where
 
 import Pure.Data.Txt (Txt,ToTxt(..),FromTxt(..))
 
@@ -13,6 +13,8 @@ import qualified Pure.Data.JSON.GHCJS as GHCJS
 import           Pure.Data.JSON.GHC   as Export hiding (encode,decode,object)
 import qualified Pure.Data.JSON.GHC   as GHC
 #endif
+
+import System.IO.Unsafe (unsafePerformIO)
 
 {-# INLINE parse #-}
 parse = flip parseMaybe
@@ -72,3 +74,10 @@ object = GHCJS.objectValue . GHCJS.object
 #else
 object = GHC.object
 #endif
+
+traceJSON :: ToJSON a => a -> b -> b
+traceJSON a b = 
+  let 
+    x = unsafePerformIO (logJSON a)
+  in 
+    x `seq` b
